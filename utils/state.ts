@@ -7,3 +7,7 @@ export function createPayloadObject(
     payload: innerValue,
   };
 }
+
+export function createPayloadCarrier<T>() {
+  return (payloadValue: T) => ({ payload: payloadValue });
+}
