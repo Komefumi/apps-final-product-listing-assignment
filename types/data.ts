@@ -1,20 +1,24 @@
-enum Status {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-}
+import { extractFromEnum } from "./utils";
 
-export const StatusKeys = Object.keys(Status) as string[];
-export const StatusValues = Object.keys(Status) as Status[];
+enum PublicationStatus {
+  ACTIVE = "Active",
+  DRAFT = "Draft",
+  ARCHIVED = "Archived",
+}
 
 enum IndoorOutdoor {
   INDOOR = "Indoor",
   OUTDOOR = "Outdoor",
 }
 
-export const IndoorOutdoorKeys = Object.keys(IndoorOutdoor) as string[];
-export const IndoorOutdoorValues = Object.values(
+export const PublicationStatusKeysAndValues = extractFromEnum<
+  string,
+  PublicationStatus
+>(PublicationStatus);
+export const IndoorOutdoorKeysAndValues = extractFromEnum<
+  string,
   IndoorOutdoor
-) as IndoorOutdoor[];
+>(IndoorOutdoor);
 
 interface IRating {
   rate: number;
@@ -32,6 +36,10 @@ export interface IProductFromAPI {
 }
 
 export interface IProduct extends IProductFromAPI {
-  status: Status;
+  publicationStatus: PublicationStatus;
   indoorOrOutdoor?: IndoorOutdoor;
+}
+
+export interface IProductItemInListing {
+  isChecked: boolean;
 }

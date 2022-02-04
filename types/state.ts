@@ -1,8 +1,8 @@
 import { ActionType } from "./alias";
-import { IProduct } from "./data";
+import { IProduct, IProductItemInListing } from "./data";
 
 export interface IAppState {
-  products: IProduct[];
+  products: IProductItemInListing[];
   haveWeSetTheProducts: boolean;
 }
 

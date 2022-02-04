@@ -5,8 +5,8 @@ import {
 import {
   IProductFromAPI,
   IProduct,
-  StatusValues,
-  IndoorOutdoorValues,
+  PublicationStatusKeysAndValues,
+  IndoorOutdoorKeysAndValues,
 } from "types/data";
 
 export function generateCompleteProducts(
@@ -14,9 +14,14 @@ export function generateCompleteProducts(
 ): IProduct[] {
   return productItemsFromAPI.map((currentItem) => {
     return {
+      isSelected: false,
       ...currentItem,
-      status: selectRandomElementFromArray(StatusValues),
-      indoorOrOutdoor: maybeSelectRandomElementFromArray(IndoorOutdoorValues),
+      publicationStatus: selectRandomElementFromArray(
+        PublicationStatusKeysAndValues.values
+      ),
+      indoorOrOutdoor: maybeSelectRandomElementFromArray(
+        IndoorOutdoorKeysAndValues.values
+      ),
     };
   });
 }
