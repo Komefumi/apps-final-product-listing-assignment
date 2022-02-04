@@ -1,3 +1,5 @@
+export type IDType = string;
+export type ClassName = string;
 export type ActionType = string;
 export type MightOrMightNotExist<T> = T | undefined;
 export type EnumType<TypeOfValueInEnum> = Record<string, TypeOfValueInEnum>;

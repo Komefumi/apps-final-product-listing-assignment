@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@ui/*": ["components/ui/*"]
+      "@ui/*": ["components/ui/*"],
+      "@non-ui/*": ["components/non-ui/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],

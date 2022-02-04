@@ -1,10 +1,13 @@
+import { IDType, MightOrMightNotExist } from "./alias";
 import { extractFromEnum } from "./utils";
 
-enum PublicationStatus {
+export enum PublicationStatus {
   ACTIVE = "Active",
   DRAFT = "Draft",
   ARCHIVED = "Archived",
 }
+
+export type PublicationListingMode = PublicationStatus | "All";
 
 enum IndoorOutdoor {
   INDOOR = "Indoor",
@@ -40,6 +43,22 @@ export interface IProduct extends IProductFromAPI {
   indoorOrOutdoor?: IndoorOutdoor;
 }
 
-export interface IProductItemInListing {
+export interface IProductItemInListing extends IProduct {
   isChecked: boolean;
 }
+
+export interface ITabData {
+  id: IDType;
+  content: string;
+}
+
+export interface IPublicationModeTabData extends Omit<ITabData, "id"> {
+  id: PublicationListingMode;
+}
+
+export interface IAutocompleteDataUnit {
+  label: string;
+  value: string;
+}
+
+export interface ISearchableDataUnit extends IAutocompleteDataUnit {}

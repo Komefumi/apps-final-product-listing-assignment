@@ -1,0 +1,24 @@
+$verticalIndent: 1rem;
+
+.page_background {
+  padding: $verticalIndent 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: $verticalIndent auto;
+}
+
+.content_panel {
+  .panel_body {
+    padding: 1rem;
+  }
+}
+
+.top_header {
+  margin-bottom: $verticalIndent;
+  .heading {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+}
