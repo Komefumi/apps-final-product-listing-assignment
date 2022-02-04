@@ -1,6 +1,9 @@
 import { useEffect } from "react";
-import type { AppProps } from "next/app";
+import { AppProps } from "next/app";
+import Head from "next/head";
 import { Provider } from "react-redux";
+import enTranslationsForShopifyPolaris from "@shopify/polaris/locales/en.json";
+import { AppProvider as ShopifyPolarisAppProvider } from "@shopify/polaris";
 import { fetchProductsFromAPI } from "api";
 import store from "state/store";
 import { createSetProducts } from "state/actions/creators";
@@ -21,17 +24,26 @@ function RenderWithNecessarySetup({ children }: WrapperProps) {
       dispatch(createSetProducts(completedProducts));
     });
   }, [haveWeSetTheProducts]);
-  return <>{children}</>;
+  return (
+    <>
+      <Head>
+        <title>Product Listing</title>
+      </Head>
+      <>{children}</>
+    </>
+  );
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyAppWrappedWithProviders({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <RenderWithNecessarySetup>
-        <Component {...pageProps} />
-      </RenderWithNecessarySetup>
+      <ShopifyPolarisAppProvider i18n={enTranslationsForShopifyPolaris}>
+        <RenderWithNecessarySetup>
+          <Component {...pageProps} />
+        </RenderWithNecessarySetup>
+      </ShopifyPolarisAppProvider>
     </Provider>
   );
 }
 
-export default MyApp;
+export default MyAppWrappedWithProviders;
