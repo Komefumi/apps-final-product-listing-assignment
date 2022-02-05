@@ -144,10 +144,14 @@ const Home: NextPage = () => {
                 <Badge status="success">{publicationStatus}</Badge>
               </IndexTable.Cell>
               <IndexTable.Cell>
-                {!textStyleForInventoryCount ? (
+                {typeof inventoryCount !== "number" ? (
+                  <TextStyle variation="subdued">
+                    Inventory not tracked
+                  </TextStyle>
+                ) : inventoryCount > 0 ? (
                   inventoryCount
                 ) : (
-                  <TextStyle variation={textStyleForInventoryCount}></TextStyle>
+                  <TextStyle variation="negative">{inventoryCount}</TextStyle>
                 )}
               </IndexTable.Cell>
               <IndexTable.Cell>{indoorOutdoorType || ""}</IndexTable.Cell>
