@@ -38,9 +38,12 @@ export interface IProductFromAPI {
   rating: IRating;
 }
 
-export interface IProduct extends IProductFromAPI {
+export interface IProduct extends Omit<IProductFromAPI, "id"> {
+  id: string;
+  inventoryCount?: number;
   publicationStatus: PublicationStatus;
-  indoorOrOutdoor?: IndoorOutdoor;
+  indoorOutdoorType?: IndoorOutdoor;
+  vendorName: string;
 }
 
 export interface IProductItemInListing extends IProduct {
@@ -62,3 +65,7 @@ export interface IAutocompleteDataUnit {
 }
 
 export interface ISearchableDataUnit extends IAutocompleteDataUnit {}
+
+export interface IIndexResource {
+  [key: string]: unknown;
+}

@@ -22,3 +22,12 @@ $verticalIndent: 1rem;
     font-size: 1.5rem;
   }
 }
+
+tr.table_row {
+  &:hover {
+    background-color: #efefef;
+  }
+  & > :first-child {
+    background-color: inherit !important;
+  }
+}

@@ -1,4 +1,4 @@
-import { ReactNode, ReactElement } from "react";
+import { ReactNode, ReactChild, ReactElement } from "react";
 import { ClassName } from "./alias";
 
 export interface WrapperProps {
@@ -6,13 +6,7 @@ export interface WrapperProps {
   children: ReactNode;
 }
 
-export interface SwitchByIfPropIsValueProps {
-  children: ReactElement[];
-  propToLookFor: string;
-  valueForEquality: string | number;
-}
-
-export interface SwitchByIndexProps {
-  children: ReactElement[];
-  currentIndex: number;
+export interface ModifyChildProps {
+  children: ReactElement;
+  props: { [propName: string]: any };
 }

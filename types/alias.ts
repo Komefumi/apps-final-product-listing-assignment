@@ -8,3 +8,4 @@ export type EnumExtraction<TheEnumItself> = {
   keys: string[];
   values: TheEnumItself[];
 };
+export type NonEmptyArray<T> = [T, ...T[]];
