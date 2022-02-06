@@ -26,8 +26,6 @@ import {
 import { NonEmptyArray } from "types/alias";
 import classes from "styles/pages/Home.module.scss";
 
-const ModifyIndexTableRow = ({}) => {};
-
 const ControlSection = () => {
   const [searchText, setSearchText] = useState("");
   const handleSearchChange = useCallback((value: string, _id: string) => {

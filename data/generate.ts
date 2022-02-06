@@ -4,27 +4,26 @@ import {
   maybeGenerateInventoryCount,
 } from "utils/rand";
 import { vendorNames } from "data/seed";
+import { IProductFromAPI, IProduct } from "types/data";
 import {
-  IProductFromAPI,
-  IProduct,
-  PublicationStatusKeysAndValues,
-  IndoorOutdoorKeysAndValues,
-} from "types/data";
+  publicationStatusKeysAndValues,
+  indoorOutdoorKeysAndValues,
+} from "./derived";
 
 export function generateCompleteProducts(
   productItemsFromAPI: IProductFromAPI[]
 ): IProduct[] {
   return productItemsFromAPI.map((currentItem) => {
     return {
+      ...currentItem,
       id: currentItem.id.toString(),
       isSelected: false,
-      ...currentItem,
       inventoryCount: maybeGenerateInventoryCount(),
       publicationStatus: selectRandomElementFromArray(
-        PublicationStatusKeysAndValues.values
+        publicationStatusKeysAndValues.values
       ),
       indoorOutdoorType: maybeSelectRandomElementFromArray(
-        IndoorOutdoorKeysAndValues.values
+        indoorOutdoorKeysAndValues.values
       ),
       vendorName: selectRandomElementFromArray(vendorNames),
     };

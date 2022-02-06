@@ -1,5 +1,4 @@
-import { IDType, MightOrMightNotExist } from "./alias";
-import { extractFromEnum } from "./utils";
+import { IDType, MightBeNull } from "./alias";
 
 export enum PublicationStatus {
   ACTIVE = "Active",
@@ -9,19 +8,32 @@ export enum PublicationStatus {
 
 export type PublicationListingMode = PublicationStatus | "All";
 
-enum IndoorOutdoor {
+export enum IndoorOutdoor {
   INDOOR = "Indoor",
   OUTDOOR = "Outdoor",
 }
 
-export const PublicationStatusKeysAndValues = extractFromEnum<
-  string,
-  PublicationStatus
->(PublicationStatus);
-export const IndoorOutdoorKeysAndValues = extractFromEnum<
-  string,
-  IndoorOutdoor
->(IndoorOutdoor);
+export enum PurchaseAvailability {
+  ONLINE_STORE = "Online Store",
+  POINT_OF_SALE = "Point of Sale",
+  BUY_BUTTON = "Buy Button",
+}
+
+export enum ProductType {
+  T_SHIRT = "T-Shirt",
+  ACCESSORY = "Accessory",
+  GIFT_CARD = "Gift Card",
+}
+
+export const ProductTypeValues = Object.values(ProductType);
+
+export enum ListFilterName {
+  PURCHASE_AVAILABILITY = "purchaseAvailability",
+  PRODUCT_TYPE = "productType",
+}
+
+export type PurchaseAvailabilityFilters = MightBeNull<PurchaseAvailability[]>;
+export type ProductTypeFilters = MightBeNull<ProductType[]>;
 
 interface IRating {
   rate: number;
@@ -59,13 +71,22 @@ export interface IPublicationModeTabData extends Omit<ITabData, "id"> {
   id: PublicationListingMode;
 }
 
-export interface IAutocompleteDataUnit {
+export interface ILabelValue {
   label: string;
   value: string;
 }
 
-export interface ISearchableDataUnit extends IAutocompleteDataUnit {}
+export interface IAutocompleteDataUnit extends ILabelValue {}
+export interface ISearchableDataUnit extends ILabelValue {}
+export interface IFilterChoice extends ILabelValue {}
 
 export interface IIndexResource {
   [key: string]: unknown;
+}
+
+export interface IListFilterFilterDataItem {
+  key: ListFilterName;
+  label: string;
+  filter: JSX.Element;
+  shortcut?: boolean;
 }
