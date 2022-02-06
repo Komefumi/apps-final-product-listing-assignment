@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Modal } from "@shopify/polaris";
 import { ProductDisplayModalProps as Props } from "types/prop-types";
 import classes from "./classes.module.scss";
@@ -15,7 +16,7 @@ export default function ProductDisplayModal(props: Props) {
       <Modal.Section>
         <main className={classes.content}>
           <section className={classes.image_display}>
-            <img src={productItem.image} alt={productItem.title} />
+            <Image src={productItem.image} alt={productItem.title} />
           </section>
           <section className={classes.description}>
             <h3 className={classes.title}>A Description:</h3>
