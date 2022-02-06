@@ -1,4 +1,4 @@
-import { ABS_MAX_PRICE, ABS_MAX_INVENTORY } from "config";
+import { ABS_MAX_PRICE, inventoryMaximum } from "config";
 import { MightOrMightNotExist } from "types/alias";
 
 function getRandomTrueOrFalse(): boolean {
@@ -34,8 +34,10 @@ export function generateRandomPrice(): number {
 export function maybeGenerateInventoryCount(): MightOrMightNotExist<number> {
   const itShouldBeGenerated = getRandomTrueOrFalse();
   if (!itShouldBeGenerated) return undefined;
-  const inventoryRawCount = Math.floor(Math.random() * (ABS_MAX_INVENTORY + 1));
   const isPositive = getRandomTrueOrFalse();
-  if (isPositive) return inventoryRawCount;
-  else return -1 * inventoryRawCount;
+  const maxValue = isPositive
+    ? inventoryMaximum.positive
+    : inventoryMaximum.negative;
+  const signDecider = isPositive ? 1 : -1;
+  return signDecider * Math.floor(Math.random() * (maxValue + 1));
 }
