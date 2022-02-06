@@ -1,4 +1,4 @@
-import { IDType, MightBeNull } from "./alias";
+import { IDType, MightOrMightNotExist, MightBeNull } from "./alias";
 
 export enum PublicationStatus {
   ACTIVE = "Active",
@@ -34,6 +34,8 @@ export enum ListFilterName {
 
 export type PurchaseAvailabilityFilters = MightBeNull<PurchaseAvailability[]>;
 export type ProductTypeFilters = MightBeNull<ProductType[]>;
+export type ListFilter = PurchaseAvailabilityFilters | ProductTypeFilters;
+export type QueryFilter = string;
 
 interface IRating {
   rate: number;

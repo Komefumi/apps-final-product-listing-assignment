@@ -10,3 +10,5 @@ export interface ModifyChildProps {
   children: ReactElement;
   props: { [propName: string]: any };
 }
+
+export interface ProductsListingControlProps {}

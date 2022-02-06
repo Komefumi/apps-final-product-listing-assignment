@@ -1,9 +1,14 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { ChoiceList, FilterInterface } from "@shopify/polaris";
+import {
+  ChoiceList,
+  FilterInterface,
+  AppliedFilterInterface,
+} from "@shopify/polaris";
 import { useAppDispatch, useAppSelector } from "./store";
 import {
   createSetFiltersListsPurchaseAvailability,
   createSetFiltersListsProductTypes,
+  createSetFiltersQuery,
 } from "./actions/creators";
 import { disambiguateLabelForListFilter } from "utils/data";
 import {
@@ -40,25 +45,60 @@ export function useGetFiltersListsChangeHandlers() {
   };
 }
 
-export function useGetAppliedListsFilters(): FilterInterface[] {
-  const [appliedFilters, setAppliedFilters] = useState<FilterInterface[]>([]);
-  const { purchaseAvailability, productType } = useGetFiltersListsState();
+export function useGetFiltersQueryStateAndHandlers() {
+  const { query } = useAppSelector((state) => state.filters);
   const dispatch = useAppDispatch();
+  const handleQueryChange = useCallback((value: string) => {
+    dispatch(createSetFiltersQuery(value));
+  }, []);
+  const handleQueryRemove = useCallback(() => {
+    dispatch(createSetFiltersQuery(null));
+  }, []);
+  return {
+    query,
+    handleQueryChange,
+    handleQueryRemove,
+  };
+}
 
+export function useGetFiltersListsRemoveHandlers() {
+  const dispatch = useAppDispatch();
   const handlePurchaseAvailabilityRemove = useCallback(() => {
     dispatch(createSetFiltersListsPurchaseAvailability(null));
   }, []);
   const handleProductTypeRemove = useCallback(() => {
     dispatch(createSetFiltersListsProductTypes(null));
   }, []);
+  const handleFiltersListsClearAll = useCallback(() => {}, [
+    handlePurchaseAvailabilityRemove,
+    handleProductTypeRemove,
+  ]);
+
+  return {
+    handlePurchaseAvailabilityRemove,
+    handleProductTypeRemove,
+    handleFiltersListsClearAll,
+  };
+}
+
+export function useGetAppliedListsFilters(): AppliedFilterInterface[] {
+  const [appliedFilters, setAppliedFilters] = useState<
+    AppliedFilterInterface[]
+  >([]);
+  const { purchaseAvailability, productType } = useGetFiltersListsState();
+  const { handlePurchaseAvailabilityRemove, handleProductTypeRemove } =
+    useGetFiltersListsRemoveHandlers();
 
   useEffect(() => {
-    const localAppliedFilters = [];
+    const localAppliedFilters: AppliedFilterInterface[] = [];
     if (purchaseAvailability) {
       const key = ListFilterName.PURCHASE_AVAILABILITY;
       localAppliedFilters.push({
         key,
-        label: disambiguateLabelForListFilter(key, purchaseAvailability),
+        label: disambiguateLabelForListFilter(
+          key,
+          purchaseAvailability
+        ) as string,
         onRemove: handlePurchaseAvailabilityRemove,
       });
     }
@@ -66,17 +106,17 @@ export function useGetAppliedListsFilters(): FilterInterface[] {
       const key = ListFilterName.PRODUCT_TYPE;
       localAppliedFilters.push({
         key,
-        label: disambiguateLabelForListFilter(key, productType),
+        label: disambiguateLabelForListFilter(key, productType) as string,
         onRemove: handleProductTypeRemove,
       });
     }
-    setAppliedFilters(localAppliedFilters as unknown as FilterInterface[]);
+    setAppliedFilters(localAppliedFilters);
   }, [purchaseAvailability, productType]);
 
   return appliedFilters;
 }
 
-export function useGetListFiltersRendering() {
+export function useGetFiltersFilterDataItems() {
   const { purchaseAvailability, productType } = useGetFiltersListsState();
   const { handlePurchaseAvailabilityChange, handleProductTypeChange } =
     useGetFiltersListsChangeHandlers();
@@ -120,4 +160,16 @@ export function useGetListFiltersRendering() {
     ]
   );
   return filters;
+}
+
+export function useGetClearFiltersAllExceptModes() {
+  const { handleQueryRemove } = useGetFiltersQueryStateAndHandlers();
+  const { handleFiltersListsClearAll } = useGetFiltersListsRemoveHandlers();
+
+  const clearAllExceptModesHandler = useCallback(() => {
+    handleQueryRemove();
+    handleFiltersListsClearAll();
+  }, [handleQueryRemove, handleFiltersListsClearAll]);
+
+  return clearAllExceptModesHandler;
 }

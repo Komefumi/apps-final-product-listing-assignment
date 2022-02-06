@@ -5,6 +5,7 @@ import {
   PublicationListingMode,
   PurchaseAvailabilityFilters,
   ProductTypeFilters,
+  QueryFilter,
 } from "./data";
 
 export interface IAppStateFiltersLists {
@@ -20,6 +21,7 @@ export interface IAppState {
       publicationListingMode: PublicationListingMode;
     };
     lists: IAppStateFiltersLists;
+    query: QueryFilter;
   };
 }
 
@@ -38,3 +40,4 @@ export type SetFiltersListsPurchaseAvailabilityAction =
   PayloadAction<PurchaseAvailabilityFilters>;
 export type SetFiltersListsProductTypeAction =
   PayloadAction<ProductTypeFilters>;
+export type SetFiltersQueryAction = PayloadAction<QueryFilter>;

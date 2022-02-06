@@ -16,6 +16,7 @@ import { SearchMinor } from "@shopify/polaris-icons";
 import clsx from "clsx";
 import Background from "@ui/Background";
 import DisplayPanel from "@ui/DisplayPanel";
+import ProductsListingControl from "@ui/ProductsListingControl";
 import ModifyChild from "@non-ui/ModifyChild";
 import { useAppSelector } from "state/store";
 import {
@@ -183,9 +184,10 @@ const Home: NextPage = () => {
               ></Tabs>
             </header>
             <main className={classes.panel_body}>
-              <section className={classes.control_section}>
+              <ProductsListingControl />
+              {/*<section className={classes.control_section}>
                 <ControlSection />
-              </section>
+            </section>*/}
               <main className={classes.item_listing}>
                 <IndexTable
                   selectable={false}
