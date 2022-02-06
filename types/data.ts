@@ -1,4 +1,9 @@
-import { IDType, MightOrMightNotExist, MightBeNull } from "./alias";
+import {
+  IDType,
+  MightOrMightNotExist,
+  MightBeNull,
+  IMappingWithStringKeys,
+} from "./alias";
 
 export enum PublicationStatus {
   ACTIVE = "Active",
@@ -54,7 +59,7 @@ interface IRating {
   count: number;
 }
 
-export interface IProductFromAPI {
+export interface IProductFromAPI extends IMappingWithStringKeys {
   id: number;
   title: string;
   price: number;
@@ -69,11 +74,9 @@ export interface IProduct extends Omit<IProductFromAPI, "id"> {
   inventoryCount?: number;
   publicationStatus: PublicationStatus;
   indoorOutdoorType?: IndoorOutdoor;
+  purchaseAvailability: PurchaseAvailability[];
+  productType: ProductType;
   vendorName: string;
-}
-
-export interface IProductItemInListing extends IProduct {
-  isChecked: boolean;
 }
 
 export interface ITabData {
@@ -103,4 +106,9 @@ export interface IListFilterFilterDataItem {
   label: string;
   filter: JSX.Element;
   shortcut?: boolean;
+}
+
+export enum ModifyChildAvailableTag {
+  TR = "tr",
+  BUTTON = "button",
 }

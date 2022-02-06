@@ -6,14 +6,32 @@ function getRandomTrueOrFalse(): boolean {
   return !!(integerToCheckWith % 2);
 }
 
-export function selectRandomElementFromArray<T>(itemArray: T[]): T {
+function throwIfArrayIsTooSmall<T>(itemArray: T[]) {
   const arrayLength = itemArray.length;
   if (arrayLength < 2) {
     throw new Error(
       "Error! It's meaningless to choose a random element from an array that doesn't have at least two elements."
     );
   }
-  return itemArray[Math.floor(Math.random() * arrayLength)];
+}
+
+export function createArrayOfRandomCountFromSourceArray<T>(
+  itemArray: T[]
+): T[] {
+  throwIfArrayIsTooSmall(itemArray);
+  const arrayLength = itemArray.length;
+  const randomSize = Math.floor(Math.random() * arrayLength);
+  const createdArray: T[] = [];
+
+  for (let i = 0; i < randomSize; i++) {
+    createdArray.push(itemArray[Math.floor(Math.random() * arrayLength)]);
+  }
+  return createdArray;
+}
+
+export function selectRandomElementFromArray<T>(itemArray: T[]): T {
+  throwIfArrayIsTooSmall(itemArray);
+  return itemArray[Math.floor(Math.random() * itemArray.length)];
 }
 
 export function maybeSelectRandomElementFromArray<T>(

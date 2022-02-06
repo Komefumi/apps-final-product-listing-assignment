@@ -10,7 +10,7 @@ import {
   SetFiltersQueryAction,
 } from "types/state";
 import {
-  IProductItemInListing,
+  IProduct,
   PurchaseAvailabilityFilters,
   ProductTypeFilters,
   VendorNameFilters,
@@ -48,7 +48,7 @@ const reducer = createReducer(initialState, (builder) => {
       state.products = action.payload.map((productItem) => ({
         ...productItem,
         isChecked: false,
-      })) as IProductItemInListing[];
+      })) as IProduct[];
       state.haveWeSetTheProducts = true;
     })
     .addCase(

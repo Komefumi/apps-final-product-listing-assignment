@@ -2,11 +2,14 @@ import {
   selectRandomElementFromArray,
   maybeSelectRandomElementFromArray,
   maybeGenerateInventoryCount,
+  createArrayOfRandomCountFromSourceArray,
 } from "utils/rand";
 import { IProductFromAPI, IProduct } from "types/data";
 import {
   publicationStatusKeysAndValues,
   indoorOutdoorKeysAndValues,
+  purchaseAvailabilityValues,
+  productTypeValues,
   vendorNameList,
 } from "./derived";
 
@@ -17,7 +20,6 @@ export function generateCompleteProducts(
     return {
       ...currentItem,
       id: currentItem.id.toString(),
-      isSelected: false,
       inventoryCount: maybeGenerateInventoryCount(),
       publicationStatus: selectRandomElementFromArray(
         publicationStatusKeysAndValues.values
@@ -25,6 +27,10 @@ export function generateCompleteProducts(
       indoorOutdoorType: maybeSelectRandomElementFromArray(
         indoorOutdoorKeysAndValues.values
       ),
+      purchaseAvailability: createArrayOfRandomCountFromSourceArray(
+        purchaseAvailabilityValues
+      ),
+      productType: selectRandomElementFromArray(productTypeValues),
       vendorName: selectRandomElementFromArray(vendorNameList),
     };
   });

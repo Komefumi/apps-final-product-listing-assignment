@@ -1,5 +1,16 @@
 $verticalIndent: 1rem;
 
+.clear_button_base {
+  background-color: transparent;
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 550;
+  cursor: pointer;
+  border-radius: 2.5px;
+  // font-weight: bold;
+}
+
 .page_background {
   padding: $verticalIndent 0;
 }
@@ -16,10 +27,75 @@ $verticalIndent: 1rem;
 }
 
 .top_header {
+  display: flex;
   margin-bottom: $verticalIndent;
   .heading {
     margin: 0;
     font-size: 1.5rem;
+    width: 100%;
+  }
+  .utils {
+    margin-left: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  .utils li {
+    flex: 0 0 auto;
+  }
+  .utils .clear_button {
+    @extend .clear_button_base;
+  }
+
+  .utils .util_popover {
+    position: relative;
+    button {
+      @extend .clear_button_base;
+      display: flex;
+    }
+    button .icon {
+      margin-top: -2px;
+      margin-left: 5px;
+    }
+    ul {
+      overflow: hidden;
+      opacity: 0;
+      position: absolute;
+      right: 0.5rem;
+      top: 2.4rem;
+      background-color: #fefefe;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+      // display: none;
+      z-index: -1;
+      flex-direction: column;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      box-shadow: -1px 1px 4px 1px rgba(0, 0, 0, 0.25);
+      transition: all 100ms ease;
+    }
+    ul li {
+      font-weight: bold;
+      min-width: 120px;
+      cursor: pointer;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    ul li:hover {
+      background-color: #121212;
+      color: #efefef;
+    }
+    ul li:not(:last-child) {
+      border-bottom: 1px solid #aaa;
+    }
+    ul.isOpen {
+      opacity: 1;
+      z-index: 100;
+      display: flex;
+    }
   }
 }
 

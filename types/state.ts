@@ -1,7 +1,6 @@
 import { ActionType } from "./alias";
 import {
   IProduct,
-  IProductItemInListing,
   PublicationListingMode,
   PurchaseAvailabilityFilters,
   ProductTypeFilters,
@@ -16,7 +15,7 @@ export interface IAppStateFiltersLists {
 }
 
 export interface IAppState {
-  products: IProductItemInListing[];
+  products: IProduct[];
   haveWeSetTheProducts: boolean;
   filters: {
     modes: {

@@ -5,6 +5,7 @@ import {
   PublicationStatus,
   IndoorOutdoor,
   VendorName,
+  IPublicationModeTabData,
 } from "types/data";
 import { extractFromEnum } from "types/utils";
 
@@ -45,3 +46,14 @@ export const purchaseAvailabilityKeysAndValues = extractFromEnum<
 export const productTypeKeysAndValues = extractFromEnum<string, ProductType>(
   ProductType
 );
+
+export const publicationModeTabs: IPublicationModeTabData[] = (function () {
+  const tabDataList: IPublicationModeTabData[] = Object.values(
+    PublicationStatus
+  ).map((statusItem) => ({
+    id: statusItem,
+    content: statusItem as string,
+  }));
+  tabDataList.unshift({ id: "All", content: "All" });
+  return tabDataList;
+})();

@@ -17,6 +17,7 @@ import {
   purchaseAvailabilityAsLabelValueList,
   vendorNameAsLabelValueList,
 } from "data/derived";
+import { IMappingFromStringKeyToMightBeNullStringList } from "types/alias";
 import { IAppStateFiltersLists } from "types/state";
 import {
   ListFilterName,
@@ -229,4 +230,80 @@ export function useGetClearFiltersAllExceptModes() {
   }, [handleQueryRemove, handleFiltersListsClearAll]);
 
   return clearAllExceptModesHandler;
+}
+
+export function useGetFilteredProducts() {
+  const { products, filters } = useAppSelector((state) => state);
+  const {
+    modes: { publicationListingMode },
+    lists: { vendorName, productType, purchaseAvailability },
+    query,
+  } = filters;
+  const propertyToListFilterMapping: IMappingFromStringKeyToMightBeNullStringList =
+    {
+      purchaseAvailability,
+      productType,
+      vendorName,
+    };
+
+  let filteredProducts = products.slice();
+  if (publicationListingMode !== "All") {
+    filteredProducts = filteredProducts.filter(
+      ({ publicationStatus }) => publicationStatus === publicationListingMode
+    );
+  }
+
+  if (query.length) {
+    const filterRegex = new RegExp(query, "i");
+    filteredProducts = filteredProducts.filter((productItx) => {
+      return ["title", "description", "category", "vendorName"].some(
+        (property) => {
+          const propertyValue = productItx[property as string];
+          if (typeof propertyValue !== "string") return false;
+          return productItx[property].match(filterRegex);
+        }
+      );
+    });
+  }
+
+  /*
+  if (purchaseAvailability) {
+    filteredProducts = filteredProducts.filter((productItx) => {
+      return purchaseAvailability.some((piece) => {
+        productItx.purchaseAvailability.includes(piece);
+      });
+    });
+  }
+
+  if (purchaseAvailability) {
+    filteredProducts = filteredProducts.filter((productItx) => {
+      return purchaseAvailability.some((piece) => {
+        productItx.purchaseAvailability.includes(piece);
+      });
+    });
+  }
+  */
+
+  if (vendorName) {
+    filteredProducts = filteredProducts.filter((productItx) =>
+      vendorName.includes(productItx.vendorName as VendorName)
+    );
+  }
+
+  for (let property in propertyToListFilterMapping) {
+    const listFilterValue = propertyToListFilterMapping[property];
+    if (!listFilterValue) continue;
+    filteredProducts = filteredProducts.filter((productItx) => {
+      const propertyValue = productItx[property];
+      if (propertyValue instanceof Array) {
+        return propertyValue.some((piece) => {
+          return listFilterValue.includes(piece);
+        });
+      } else {
+        return listFilterValue.includes(propertyValue);
+      }
+    });
+  }
+
+  return filteredProducts;
 }

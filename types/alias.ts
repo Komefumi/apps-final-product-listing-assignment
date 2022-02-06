@@ -10,3 +10,11 @@ export type EnumExtraction<TheEnumItself> = {
   values: TheEnumItself[];
 };
 export type NonEmptyArray<T> = [T, ...T[]];
+export interface IMappingWithStringKeys {
+  [key: string]: any;
+}
+export interface IMappingFromStringKeyToMightBeNullStringList {
+  [key: string]: MightBeNull<string[]>;
+}
+
+export type TriggerFunc = () => void;

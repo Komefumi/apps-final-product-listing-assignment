@@ -1,73 +1,55 @@
 import { useState, useMemo, useCallback, MouseEvent } from "react";
 import type { NextPage } from "next";
 import {
-  TextField,
   Tabs,
-  Icon,
   IndexTable,
   TextStyle,
   Badge,
   Thumbnail,
-  Modal,
-  TextContainer,
+  Button,
+  Icon,
   useIndexResourceState,
 } from "@shopify/polaris";
-import { SearchMinor } from "@shopify/polaris-icons";
+import { CaretDownMinor } from "@shopify/polaris-icons";
 import clsx from "clsx";
 import Background from "@ui/Background";
 import DisplayPanel from "@ui/DisplayPanel";
 import ProductsListingControl from "@ui/ProductsListingControl";
+import ProductDisplayModal from "@ui/ProductDisplayModal";
 import ModifyChild from "@non-ui/ModifyChild";
-import { useAppSelector } from "state/store";
-import {
-  PublicationStatus,
-  IPublicationModeTabData,
-  IIndexResource,
-} from "types/data";
+import { useAppSelector, useAppDispatch } from "state/store";
+import { useGetFilteredProducts } from "state/hooks";
+import { createSetFiltersModesPublicationListingMode } from "state/actions/creators";
+import { publicationModeTabs } from "data/derived";
+import { IIndexResource, ModifyChildAvailableTag } from "types/data";
 import { NonEmptyArray } from "types/alias";
 import classes from "styles/pages/Home.module.scss";
 
-const ControlSection = () => {
-  const [searchText, setSearchText] = useState("");
-  const handleSearchChange = useCallback((value: string, _id: string) => {
-    setSearchText(value);
-  }, []);
-
-  return (
-    <div>
-      <TextField
-        value={searchText}
-        onChange={handleSearchChange}
-        label=""
-        placeholder="Search"
-        autoComplete="off"
-        prefix={<Icon source={SearchMinor} color="base" />}
-      />
-    </div>
-  );
-};
-
 const Home: NextPage = () => {
-  const { products: productsFromState } = useAppSelector((state) => state);
+  const {
+    modes: { publicationListingMode },
+  } = useAppSelector((state) => state.filters);
+  const dispatch = useAppDispatch();
+  const productsFromState = useGetFilteredProducts();
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [viewingProductIndex, setViewingProductIndex] = useState(0);
+  const [isMoreOptionsPopoverOpen, setIsMoreOptionsPopoverOpen] =
+    useState(false);
+  const toggleIsMoreOptionsPopoverOpen = useCallback(() => {
+    setIsMoreOptionsPopoverOpen(!isMoreOptionsPopoverOpen);
+  }, [isMoreOptionsPopoverOpen, setIsMoreOptionsPopoverOpen]);
   const toggleProductModal = useCallback(() => {
     setIsProductModalOpen(!isProductModalOpen);
   }, [isProductModalOpen]);
-  const publicationModeTabs: IPublicationModeTabData[] = useMemo(() => {
-    const tabDataList: IPublicationModeTabData[] = [
-      PublicationStatus.ACTIVE,
-      PublicationStatus.DRAFT,
-      PublicationStatus.ARCHIVED,
-    ].map((statusItem) => ({
-      id: statusItem,
-      content: statusItem as string,
-    }));
-    tabDataList.unshift({ id: "All", content: "All" });
-    return tabDataList;
+  const currentPublicationModeTabIndex = useMemo(() => {
+    return publicationModeTabs.findIndex((tabItemItx) => {
+      return tabItemItx.id === publicationListingMode;
+    });
+  }, [publicationListingMode]);
+  const handlePublicationTabModeChange = useCallback((nextIndex: number) => {
+    const nextMode = publicationModeTabs[nextIndex].id;
+    dispatch(createSetFiltersModesPublicationListingMode(nextMode));
   }, []);
-  const [currentPublicationModeTabIndex, setCurrentPublicationModeTabIndex] =
-    useState<number>(0);
   const productTableResourceName = useMemo(
     () => ({ singular: "product", plural: "products" }),
     []
@@ -100,18 +82,13 @@ const Home: NextPage = () => {
         },
         index
       ) => {
-        let textStyleForInventoryCount: "subdued" | "negative" | undefined;
-        if (!inventoryCount) {
-          textStyleForInventoryCount = "subdued";
-        } else if (inventoryCount < 0) {
-          textStyleForInventoryCount = "negative";
-        }
         const clickHandler = (_e: MouseEvent<HTMLTableRowElement>) => {
           setViewingProductIndex(index);
           toggleProductModal();
         };
         return (
           <ModifyChild
+            chosenTag={ModifyChildAvailableTag.TR}
             props={{
               "data-power": "3000",
               className: clsx(
@@ -170,9 +147,32 @@ const Home: NextPage = () => {
             <h2 className={clsx("Polaris-Heading", classes.heading)}>
               Products
             </h2>
-            <ul>
-              <li>Export</li>
-              <li>Import</li>
+            <ul className={classes.utils}>
+              <li>
+                <button className={classes.clear_button}>Export</button>
+              </li>
+              <li>
+                <button className={classes.clear_button}>Import</button>
+              </li>
+              <li>
+                <div className={classes.util_popover}>
+                  <button onClick={toggleIsMoreOptionsPopoverOpen}>
+                    <span className={classes.text}>More Options</span>
+                    <span className={classes.icon}>
+                      <Icon source={CaretDownMinor} color="base" />
+                    </span>
+                  </button>
+                  <ul
+                    className={clsx(isMoreOptionsPopoverOpen && classes.isOpen)}
+                  >
+                    <li>Option A</li>
+                    <li>Option B</li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <Button primary>Add Product</Button>
+              </li>
             </ul>
           </header>
           <DisplayPanel className={classes.content_panel}>
@@ -180,14 +180,11 @@ const Home: NextPage = () => {
               <Tabs
                 tabs={publicationModeTabs}
                 selected={currentPublicationModeTabIndex}
-                onSelect={setCurrentPublicationModeTabIndex}
+                onSelect={handlePublicationTabModeChange}
               ></Tabs>
             </header>
             <main className={classes.panel_body}>
               <ProductsListingControl />
-              {/*<section className={classes.control_section}>
-                <ControlSection />
-            </section>*/}
               <main className={classes.item_listing}>
                 <IndexTable
                   selectable={false}
@@ -208,18 +205,12 @@ const Home: NextPage = () => {
           </DisplayPanel>
         </div>
       </Background>
-      {productsFromState?.length && (
-        <Modal
-          open={isProductModalOpen}
-          onClose={toggleProductModal}
-          title={productsFromState[viewingProductIndex].title}
-        >
-          <Modal.Section>
-            <TextContainer>
-              <p>Text Content for Modal</p>
-            </TextContainer>
-          </Modal.Section>
-        </Modal>
+      {productsFromState.length && (
+        <ProductDisplayModal
+          isProductModalOpen={isProductModalOpen}
+          productItem={productsFromState[viewingProductIndex]}
+          handleClose={toggleProductModal}
+        />
       )}
     </>
   );
