@@ -33,24 +33,33 @@ function RenderWithNecessarySetup({ children }: WrapperProps) {
 
   if (!haveWeSetTheProducts) {
     return (
-      <Frame>
-        {!errored && <Loading />}
-        <Modal
-          open={errored}
-          title="Error Starting Application"
-          onClose={() => {}}
-        >
-          <Modal.Section>
-            <TextContainer>
-              <p>There was an error during start up of the application.</p>
-              <p>
-                Data could not be fetched. This was likely due to a network
-                error. Please refresh or try again later
-              </p>
-            </TextContainer>
-          </Modal.Section>
-        </Modal>
-      </Frame>
+      <>
+        <Head>
+          <title>
+            {!errored
+              ? "Product Listing: Loading..."
+              : "Error: Product Listing could not be started"}
+          </title>
+        </Head>
+        <Frame>
+          {!errored && <Loading />}
+          <Modal
+            open={errored}
+            title="Error Starting Application"
+            onClose={() => {}}
+          >
+            <Modal.Section>
+              <TextContainer>
+                <p>There was an error during start up of the application.</p>
+                <p>
+                  Data could not be fetched. This was likely due to a network
+                  error. Please refresh or try again later
+                </p>
+              </TextContainer>
+            </Modal.Section>
+          </Modal>
+        </Frame>
+      </>
     );
   }
   return (
