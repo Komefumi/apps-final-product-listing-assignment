@@ -6,11 +6,13 @@ import {
   PurchaseAvailabilityFilters,
   ProductTypeFilters,
   QueryFilter,
+  VendorNameFilters,
 } from "./data";
 
 export interface IAppStateFiltersLists {
   purchaseAvailability: PurchaseAvailabilityFilters;
   productType: ProductTypeFilters;
+  vendorName: VendorNameFilters;
 }
 
 export interface IAppState {
@@ -40,4 +42,5 @@ export type SetFiltersListsPurchaseAvailabilityAction =
   PayloadAction<PurchaseAvailabilityFilters>;
 export type SetFiltersListsProductTypeAction =
   PayloadAction<ProductTypeFilters>;
+export type SetFiltersListsVendorNameAction = PayloadAction<VendorNameFilters>;
 export type SetFiltersQueryAction = PayloadAction<QueryFilter>;

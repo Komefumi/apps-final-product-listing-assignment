@@ -11,6 +11,10 @@ export function disambiguateLabelForListFilter<T extends string>(
     case ListFilterName.PRODUCT_TYPE: {
       return value.join(", ");
     }
+    case ListFilterName.VENDOR_NAME: {
+      const joinedValue = value.join(", ");
+      return `Available from: ${joinedValue}`;
+    }
     default:
       return value;
   }

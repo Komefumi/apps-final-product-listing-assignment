@@ -7,6 +7,7 @@ import {
   PurchaseAvailabilityFilters,
   ProductTypeFilters,
   QueryFilter,
+  VendorNameFilters,
 } from "types/data";
 
 const {
@@ -14,6 +15,7 @@ const {
   SET_FILTER__MODES__PUBLICATION_LISTING_MODE,
   SET_FILTER__LISTS__PURCHASE_AVAILABILITY,
   SET_FILTER__LISTS__PRODUCT_TYPE,
+  SET_FILTER__LISTS__VENDOR_NAME,
   SET_FILTER__QUERY,
 } = actionNames;
 
@@ -32,9 +34,14 @@ export const createSetFiltersListsPurchaseAvailability = createAction(
   createPayloadCarrier<PurchaseAvailabilityFilters>()
 );
 
-export const createSetFiltersListsProductTypes = createAction(
+export const createSetFiltersListsProductType = createAction(
   SET_FILTER__LISTS__PRODUCT_TYPE,
   createPayloadCarrier<ProductTypeFilters>()
+);
+
+export const createSetFiltersListsVendorNames = createAction(
+  SET_FILTER__LISTS__VENDOR_NAME,
+  createPayloadCarrier<VendorNameFilters>(),
 );
 
 export const createSetFiltersQuery = createAction(

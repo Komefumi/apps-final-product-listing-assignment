@@ -6,12 +6,14 @@ import {
   SetFiltersModesPublicationListingModeAction,
   SetFiltersListsPurchaseAvailabilityAction,
   SetFiltersListsProductTypeAction,
+  SetFiltersListsVendorNameAction,
   SetFiltersQueryAction,
 } from "types/state";
 import {
   IProductItemInListing,
   PurchaseAvailabilityFilters,
   ProductTypeFilters,
+  VendorNameFilters,
 } from "types/data";
 import actionNames from "./actions/names";
 
@@ -20,6 +22,7 @@ const {
   SET_FILTER__MODES__PUBLICATION_LISTING_MODE,
   SET_FILTER__LISTS__PURCHASE_AVAILABILITY,
   SET_FILTER__LISTS__PRODUCT_TYPE,
+  SET_FILTER__LISTS__VENDOR_NAME,
   SET_FILTER__QUERY,
 } = actionNames;
 
@@ -33,6 +36,7 @@ const initialState: IAppState = {
     lists: {
       purchaseAvailability: null,
       productType: null,
+      vendorName: null,
     },
     query: "",
   },
@@ -67,6 +71,14 @@ const reducer = createReducer(initialState, (builder) => {
         state.filters.lists.productType = getListFilterOrNullIfEmpty(
           action.payload
         ) as ProductTypeFilters;
+      }
+    )
+    .addCase(
+      SET_FILTER__LISTS__VENDOR_NAME,
+      (state, action: SetFiltersListsVendorNameAction) => {
+        state.filters.lists.vendorName = getListFilterOrNullIfEmpty(
+          action.payload
+        ) as VendorNameFilters;
       }
     )
     .addCase(SET_FILTER__QUERY, (state, action: SetFiltersQueryAction) => {

@@ -25,16 +25,28 @@ export enum ProductType {
   GIFT_CARD = "Gift Card",
 }
 
+export enum VendorName {
+  COMPANY_123 = "Company 123",
+  BORING_ROCK = "Boring Rock",
+  RUSTIC_LTD = "Rustic LTD",
+  PARTNERS_DEMO = "partners-demo",
+}
+
 export const ProductTypeValues = Object.values(ProductType);
 
 export enum ListFilterName {
   PURCHASE_AVAILABILITY = "purchaseAvailability",
   PRODUCT_TYPE = "productType",
+  VENDOR_NAME = "vendorName",
 }
 
 export type PurchaseAvailabilityFilters = MightBeNull<PurchaseAvailability[]>;
 export type ProductTypeFilters = MightBeNull<ProductType[]>;
-export type ListFilter = PurchaseAvailabilityFilters | ProductTypeFilters;
+export type VendorNameFilters = MightBeNull<VendorName[]>;
+export type ListFilter =
+  | PurchaseAvailabilityFilters
+  | ProductTypeFilters
+  | VendorNameFilters;
 export type QueryFilter = string;
 
 interface IRating {

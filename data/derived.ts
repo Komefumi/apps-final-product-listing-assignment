@@ -4,6 +4,7 @@ import {
   ProductType,
   PublicationStatus,
   IndoorOutdoor,
+  VendorName,
 } from "types/data";
 import { extractFromEnum } from "types/utils";
 
@@ -15,8 +16,14 @@ export const purchaseAvailabilityAsLabelValueList: ILabelValue[] =
   }));
 
 export const productTypeValues = Object.values(ProductType);
-
 export const productTypeAsLabelValueList: ILabelValue[] = productTypeValues.map(
+  (value) => ({
+    label: value,
+    value,
+  })
+);
+export const vendorNameList = Object.values(VendorName);
+export const vendorNameAsLabelValueList: ILabelValue[] = vendorNameList.map(
   (value) => ({
     label: value,
     value,

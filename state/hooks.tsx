@@ -7,13 +7,15 @@ import {
 import { useAppDispatch, useAppSelector } from "./store";
 import {
   createSetFiltersListsPurchaseAvailability,
-  createSetFiltersListsProductTypes,
+  createSetFiltersListsProductType,
+  createSetFiltersListsVendorNames,
   createSetFiltersQuery,
 } from "./actions/creators";
 import { disambiguateLabelForListFilter } from "utils/data";
 import {
   productTypeAsLabelValueList,
   purchaseAvailabilityAsLabelValueList,
+  vendorNameAsLabelValueList,
 } from "data/derived";
 import { IAppStateFiltersLists } from "types/state";
 import {
@@ -21,6 +23,7 @@ import {
   PurchaseAvailability,
   IListFilterFilterDataItem,
   ProductType,
+  VendorName,
 } from "types/data";
 
 function useGetFiltersListsState(): IAppStateFiltersLists {
@@ -37,11 +40,15 @@ export function useGetFiltersListsChangeHandlers() {
     []
   );
   const handleProductTypeChange = useCallback((value: ProductType[]) => {
-    dispatch(createSetFiltersListsProductTypes(value));
+    dispatch(createSetFiltersListsProductType(value));
+  }, []);
+  const handleVendorNameChange = useCallback((value: VendorName[]) => {
+    dispatch(createSetFiltersListsVendorNames(value));
   }, []);
   return {
     handlePurchaseAvailabilityChange,
     handleProductTypeChange,
+    handleVendorNameChange,
   };
 }
 
@@ -52,7 +59,7 @@ export function useGetFiltersQueryStateAndHandlers() {
     dispatch(createSetFiltersQuery(value));
   }, []);
   const handleQueryRemove = useCallback(() => {
-    dispatch(createSetFiltersQuery(null));
+    dispatch(createSetFiltersQuery(""));
   }, []);
   return {
     query,
@@ -67,16 +74,26 @@ export function useGetFiltersListsRemoveHandlers() {
     dispatch(createSetFiltersListsPurchaseAvailability(null));
   }, []);
   const handleProductTypeRemove = useCallback(() => {
-    dispatch(createSetFiltersListsProductTypes(null));
+    dispatch(createSetFiltersListsProductType(null));
   }, []);
-  const handleFiltersListsClearAll = useCallback(() => {}, [
+  const handleVendorNameRemove = useCallback(() => {
+    dispatch(createSetFiltersListsVendorNames(null));
+  }, []);
+  const removeHandlers = [
     handlePurchaseAvailabilityRemove,
     handleProductTypeRemove,
-  ]);
+    handleVendorNameRemove,
+  ];
+  const handleFiltersListsClearAll = useCallback(() => {
+    removeHandlers.forEach((handler) => {
+      handler();
+    });
+  }, removeHandlers);
 
   return {
     handlePurchaseAvailabilityRemove,
     handleProductTypeRemove,
+    handleVendorNameRemove,
     handleFiltersListsClearAll,
   };
 }
@@ -85,9 +102,13 @@ export function useGetAppliedListsFilters(): AppliedFilterInterface[] {
   const [appliedFilters, setAppliedFilters] = useState<
     AppliedFilterInterface[]
   >([]);
-  const { purchaseAvailability, productType } = useGetFiltersListsState();
-  const { handlePurchaseAvailabilityRemove, handleProductTypeRemove } =
-    useGetFiltersListsRemoveHandlers();
+  const { purchaseAvailability, productType, vendorName } =
+    useGetFiltersListsState();
+  const {
+    handlePurchaseAvailabilityRemove,
+    handleProductTypeRemove,
+    handleVendorNameRemove,
+  } = useGetFiltersListsRemoveHandlers();
 
   useEffect(() => {
     const localAppliedFilters: AppliedFilterInterface[] = [];
@@ -110,16 +131,35 @@ export function useGetAppliedListsFilters(): AppliedFilterInterface[] {
         onRemove: handleProductTypeRemove,
       });
     }
+    if (vendorName) {
+      const key = ListFilterName.VENDOR_NAME;
+      localAppliedFilters.push({
+        key,
+        label: disambiguateLabelForListFilter(key, vendorName) as string,
+        onRemove: handleVendorNameRemove,
+      });
+    }
     setAppliedFilters(localAppliedFilters);
-  }, [purchaseAvailability, productType]);
+  }, [
+    purchaseAvailability,
+    productType,
+    vendorName,
+    handlePurchaseAvailabilityRemove,
+    handleProductTypeRemove,
+    handleVendorNameRemove,
+  ]);
 
   return appliedFilters;
 }
 
 export function useGetFiltersFilterDataItems() {
-  const { purchaseAvailability, productType } = useGetFiltersListsState();
-  const { handlePurchaseAvailabilityChange, handleProductTypeChange } =
-    useGetFiltersListsChangeHandlers();
+  const { purchaseAvailability, productType, vendorName } =
+    useGetFiltersListsState();
+  const {
+    handlePurchaseAvailabilityChange,
+    handleProductTypeChange,
+    handleVendorNameChange,
+  } = useGetFiltersListsChangeHandlers();
   const filters: IListFilterFilterDataItem[] = useMemo(
     () => [
       {
@@ -150,13 +190,30 @@ export function useGetFiltersFilterDataItems() {
             allowMultiple
           />
         ),
+        shortcut: true,
+      },
+      {
+        key: ListFilterName.VENDOR_NAME,
+        label: "Vendor",
+        filter: (
+          <ChoiceList
+            title="Vendor"
+            titleHidden
+            choices={vendorNameAsLabelValueList}
+            selected={vendorName || []}
+            onChange={handleVendorNameChange}
+            allowMultiple
+          />
+        ),
       },
     ],
     [
       purchaseAvailability,
       productType,
+      vendorName,
       handlePurchaseAvailabilityChange,
       handleProductTypeChange,
+      handleVendorNameChange,
     ]
   );
   return filters;

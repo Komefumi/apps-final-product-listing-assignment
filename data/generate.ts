@@ -3,11 +3,11 @@ import {
   maybeSelectRandomElementFromArray,
   maybeGenerateInventoryCount,
 } from "utils/rand";
-import { vendorNames } from "data/seed";
 import { IProductFromAPI, IProduct } from "types/data";
 import {
   publicationStatusKeysAndValues,
   indoorOutdoorKeysAndValues,
+  vendorNameList,
 } from "./derived";
 
 export function generateCompleteProducts(
@@ -25,7 +25,7 @@ export function generateCompleteProducts(
       indoorOutdoorType: maybeSelectRandomElementFromArray(
         indoorOutdoorKeysAndValues.values
       ),
-      vendorName: selectRandomElementFromArray(vendorNames),
+      vendorName: selectRandomElementFromArray(vendorNameList),
     };
   });
 }
