@@ -29,7 +29,7 @@ function RenderWithNecessarySetup({ children }: WrapperProps) {
       .catch(() => {
         setErrored(true);
       });
-  }, [haveWeSetTheProducts]);
+  }, [haveWeSetTheProducts, dispatch]);
 
   if (!haveWeSetTheProducts) {
     return (

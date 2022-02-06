@@ -49,7 +49,7 @@ const Home: NextPage = () => {
   const handlePublicationTabModeChange = useCallback((nextIndex: number) => {
     const nextMode = publicationModeTabs[nextIndex].id;
     dispatch(createSetFiltersModesPublicationListingMode(nextMode));
-  }, []);
+  }, [dispatch]);
   const productTableResourceName = useMemo(
     () => ({ singular: "product", plural: "products" }),
     []
@@ -88,6 +88,7 @@ const Home: NextPage = () => {
         };
         return (
           <ModifyChild
+            key={id}
             chosenTag={ModifyChildAvailableTag.TR}
             props={{
               "data-power": "3000",
@@ -100,7 +101,6 @@ const Home: NextPage = () => {
           >
             <IndexTable.Row
               id={id}
-              key={id}
               selected={selectedProductResources.includes(id)}
               position={index}
             >
@@ -137,7 +137,7 @@ const Home: NextPage = () => {
         );
       }
     );
-  }, [productsFromState, selectedProductResources]);
+  }, [productsFromState, selectedProductResources, toggleProductModal]);
 
   return (
     <>
