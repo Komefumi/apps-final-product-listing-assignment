@@ -16,7 +16,12 @@ export default function ProductDisplayModal(props: Props) {
       <Modal.Section>
         <main className={classes.content}>
           <section className={classes.image_display}>
-            <Image src={productItem.image} alt={productItem.title} />
+            <Image
+              src={productItem.image}
+              alt={productItem.title}
+              width={250}
+              height={250}
+            />
           </section>
           <section className={classes.description}>
             <h3 className={classes.title}>A Description:</h3>
